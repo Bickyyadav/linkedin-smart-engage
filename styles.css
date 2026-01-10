@@ -1,0 +1,41 @@
+.ai-container {
+  position: relative;
+  font-family: Inter, sans-serif;
+}
+
+.ai-trigger-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ai-popup {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border-radius: 12px;
+  width: 200px;
+  padding: 8px;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  display: none;
+  z-index: 9999;
+}
+
+.ai-popup.active {
+  display: block;
+}
+
+.menu-item {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.menu-item:hover {
+  background: #f3f4f6;
+}
