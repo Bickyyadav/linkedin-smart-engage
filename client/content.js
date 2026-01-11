@@ -11,6 +11,7 @@ const observer = new MutationObserver(() => {
             addSuggestionButton(element);
         });
 });
+
 observer.observe(document.body, { childList: true, subtree: true });
 
 async function addSuggestionButton(element) {
@@ -25,19 +26,35 @@ async function addSuggestionButton(element) {
     const button = wrapper.querySelector("#aiButton");
     const popup = wrapper.querySelector("#aiPopup");
 
-    // Toggle popup
     button.addEventListener("click", (e) => {
         e.stopPropagation();
         popup.classList.toggle("active");
     });
 
-    // Handle menu click
     wrapper.querySelectorAll(".menu-item").forEach((item) => {
         item.addEventListener("click", () => {
             const tone = item.dataset.tone;
             popup.classList.remove("active");
 
-            insertSuggestion(element, tone);
+            // Find post content
+            let postContent = "";
+            let parent = element.parentElement;
+
+            while (parent) {
+                const contentNode = parent.querySelector(".f07604c7._96ab7864");
+                if (contentNode) {
+                    postContent = contentNode.innerText.trim();
+                    break;
+                }
+                parent = parent.parentElement;
+                if (parent === document.body) break;
+            }
+
+            if (!postContent) {
+                console.warn("Could not find post content for selector .f07604c7._96ab7864");
+            }
+
+            insertSuggestion(element, tone, postContent);
         });
     });
 
@@ -48,13 +65,21 @@ async function addSuggestionButton(element) {
     element.appendChild(wrapper);
 }
 
+async function insertSuggestion(element, tone, postContent) {
+    const editor = element.querySelector("div[contenteditable='true']");
+    if (!editor) return;
+   
+    // const suggestion = `[${tone}] Response to: "${postContent ? postContent.substring(0, 30) + '...' : 'Unknown'}..." ✨`;
+    const suggestion =await generateComment(tone, postContent);
 
-function insertSuggestion(element, tone) {
-  const editor = element.querySelector("div[contenteditable='true']");
-  if (!editor) return;
+    editor.innerHTML = `<p>${suggestion}</p>`;
+    editor.focus();
 
-  const suggestion = `This is a ${tone} AI comment ✨`;
-
-  editor.innerHTML = `<p>${suggestion}</p>`;
-  editor.focus();
+    // Move cursor to end
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(editor);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
 }

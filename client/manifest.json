@@ -9,9 +9,12 @@
                 "https://www.linkedin.com/*"
             ],
             "js": [
-                "content.js"
+                "content.js",
+                "backgroundScript.js"
             ],
-            "css": ["styles.css"]
+            "css": [
+                "styles.css"
+            ]
         }
     ],
     "permissions": [
@@ -20,7 +23,7 @@
         "storage"
     ],
     "host_permissions": [
-        "https://api.myserver.com/*"
+        "http://localhost:8000/*"
     ],
     "background": {
         "service_worker": "backgroundScript.js"
